@@ -1,0 +1,68 @@
+$(document).ready(function () {
+
+
+
+    chrome.storage.sync.get(["Url"], function (item) {
+        if(item.Url === "" || item.Url == undefined)
+        {
+            $("#trackerPage").hide();
+            $("#inputError").hide();
+        }
+        else
+        {
+            $("#homePage").hide();
+            $("#inputError").hide();
+        }
+    });
+
+    $("#goHome").click(function(){
+        chrome.storage.sync.remove(["Url"], function () {
+            console.log("Removed key successfully !");
+        });
+        $("#homePage").show();
+        $("#trackerPage").hide();
+    });
+
+    $("#saveBtn").click(function () {
+        var inputValue = document.querySelector("#inputUrl").value;
+        if (inputValue === "") {
+            $("#inputError").show();
+        }
+        else {
+            chrome.storage.sync.set({ "Url": inputValue }, function () {
+                $("#inputError").hide();
+                $("#homePage").hide();
+                $("#trackerPage").show();
+            });
+        }
+    });
+
+    $("#cancelBtn").click(function () {
+        chrome.storage.sync.remove(["Url"], function () {
+            console.log("Removed key successfully !");
+        });
+    });
+
+    $("#useNewTab").click(function () {
+
+        var urlForNewTab = "";
+
+        chrome.storage.sync.get(["Url"], function (item) {
+            urlForNewTab = item.Url;
+            console.log(urlForNewTab);
+        });
+
+        var storyId = document.querySelector("#storyId").value;
+
+       var newUrlForNewTab = urlForNewTab + document.querySelector("#storyId").value; 
+        console.log(newUrlForNewTab);
+
+        // chrome.tabs.create({ active : true, url : urlForNewTab }, function () {
+        //     console.log("Created new tab successfully!");
+        // });
+    });
+
+});
+
+
+
